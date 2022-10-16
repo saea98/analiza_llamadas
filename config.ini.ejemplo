@@ -1,0 +1,19 @@
+; config.ini
+[DEFAULT]
+DB_NAME = nombre_base_datos
+DB_USER = usuarios_base_datos
+DB_PASSWORD = password_base_datos
+DB_PORT = puerto_base_datos
+DB_HOST = hst_base_datos
+[TESTING]
+DB_NAME = nombre_base_datos
+DB_USER = usuario_base_datos
+DB_PASSWORD = password_base_datos
+DB_PORT = puerto_base_datos
+DB_HOST = host_base_datos
+[PRODUCTION]
+DB_NAME = nombre_base_datos
+DB_USER = usuario_base_datos
+DB_PASSWORD = password_base_datos
+DB_PORT = puerto_base_datos
+DB_HOST = host_base_datos
