@@ -7,16 +7,17 @@ from sentiment_analysis_spanish import sentiment_analysis
 #archivo=sys.argv[1]
 #config = configparser.ConfigParser()
 #config.read("config.ini")
-def transcribe(nom_archivo):
-    #model = whisper.load_model("large", device = "gpu")
-    model = whisper.load_model("large")
-    result = model.transcribe(nom_archivo, fp16=False)
+def transcribe(path, nom_archivo, fecha_grabacion):
+    model = whisper.load_model("large", device = "cpu")
+    #model = whisper.load_model("large")
+    result = model.transcribe(path+"/"+nom_archivo, fp16=False)
     print(result["text"])
+    print(fecha_grabacion)
     sentiment = sentiment_analysis.SentimentAnalysisSpanish()
     sentimiento=sentiment.sentiment(result["text"])
     print(sentimiento)
-    guarda_log(nom_archivo, result["text"], sentimiento)
-def guarda_log(nom_archivo, transcripcion, tipo):
+    guarda_log(nom_archivo, result["text"], sentimiento, fecha_grabacion)
+def guarda_log(nom_archivo, transcripcion, tipo, fecha_grabacion):
     config = configparser.ConfigParser()
     config.read("config.ini")
     try:
@@ -27,8 +28,8 @@ def guarda_log(nom_archivo, transcripcion, tipo):
                                   database=config["DEFAULT"]["DB_NAME"])
         cursor = connection.cursor()
 
-        postgres_insert_query = """ INSERT INTO texto_analizado ( archivo, contenido,tipo_comentario) VALUES (%s,%s,%s)"""
-        record_to_insert = (nom_archivo, transcripcion, tipo)
+        postgres_insert_query = """ INSERT INTO texto_analizado (archivo, contenido, tipo_comentario, fecha_grabacion) VALUES (%s,%s,%s,%s)"""
+        record_to_insert = (nom_archivo, transcripcion, tipo, fecha_grabacion)
         cursor.execute(postgres_insert_query, record_to_insert)
 
         connection.commit()
