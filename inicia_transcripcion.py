@@ -41,7 +41,7 @@ for path in os.listdir(dir_path):
                     print('Ya fue procesado')
 
             except (Exception, psycopg2.Error) as error:
-                print("Error al buscar el registro", error)
+                print("Error al buscar el registro", error, path)
             finally:
                 # closing database connection.
                 if connection:

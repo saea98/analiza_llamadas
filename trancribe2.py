@@ -1,5 +1,7 @@
+import torch
 import whisper
 import psycopg2
+import tensorflow as tf
 #import sys
 import configparser 
 from sentiment_analysis_spanish import sentiment_analysis
@@ -8,8 +10,22 @@ from sentiment_analysis_spanish import sentiment_analysis
 #config = configparser.ConfigParser()
 #config.read("config.ini")
 def transcribe(path, nom_archivo, fecha_grabacion):
-    model = whisper.load_model("large", device = "cpu")
-    #model = whisper.load_model("large")
+    #model = whisper.load_model("large", device = "cpu")
+    physical_devices = tf.config.experimental.list_physical_devices('GPU')
+    for i in physical_devices:
+        tf.config.experimental.set_memory_growth(i, True)
+    print(f"PyTorch version: {torch.__version__}")
+    # Check PyTorch has access to MPS (Metal Performance Shader, Apple's GPU architecture)
+    print(f"Is MPS (Metal Performance Shader) built? {torch.backends.mps.is_built()}")
+    print(f"Is MPS available? {torch.backends.mps.is_available()}")
+    device_torch = torch.device('cuda')
+    print(device_torch)
+    # Set the device      
+    device1 = "mps" if torch.backends.mps.is_available() else "cpu"
+    print(f"Using device: {device1}")
+    x = torch.rand(size=(5, 6)).to(device1)
+    x
+    model = whisper.load_model("large",device = "cpu")
     result = model.transcribe(path+"/"+nom_archivo, fp16=False)
     print(result["text"])
     print(fecha_grabacion)
